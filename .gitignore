@@ -1,0 +1,26 @@
+# .NET
+**/bin/
+**/obj/
+
+# Node / Angular
+**/node_modules/
+**/.angular/
+**/dist/
+
+# IDE
+.vs/
+**/.vs/
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos locais
+*.user
+*.suo
+# Configurações locais com credenciais
+**/appsettings.json
+**/appsettings.Development.json

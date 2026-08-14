@@ -1,0 +1,225 @@
+<div class="container">
+
+
+<header class="header">
+  <img src="/logo-korp.jpg" alt="Korp ERP">
+
+  <div>
+    <h1>Sistema Korp</h1>
+    <p>Controle de Estoque e Faturamento</p>
+  </div>
+</header>
+
+
+<section class="card">
+
+<h2>Cadastrar Produto</h2>
+
+
+<div class="form-grid">
+
+  <div>
+    <label>
+      Código:
+      <input type="text" [(ngModel)]="codigo">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Descrição:
+      <input type="text" [(ngModel)]="descricao">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Saldo:
+      <input type="number" [(ngModel)]="saldo">
+    </label>
+  </div>
+
+</div>
+
+<button (click)="cadastrarProduto()">
+  Cadastrar Produto
+</button>
+@if (mensagemProduto()) {
+  <div
+    class="mensagem"
+    [class.sucesso]="tipoMensagemProduto() === 'sucesso'"
+    [class.erro]="tipoMensagemProduto() === 'erro'">
+    {{ mensagemProduto() }}
+  </div>
+
+}
+
+</section>
+
+
+
+<section class="card">
+<h2>Produtos</h2>
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Descrição</th>
+      <th>Saldo</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (produto of produtos(); track produto.id) {
+      <tr>
+        <td>{{ produto.codigo }}</td>
+        <td>{{ produto.descricao }}</td>
+        <td>{{ produto.saldo }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
+</section>
+
+
+
+<section class="card">
+<h2>Criar Nota Fiscal</h2>
+
+<div class="form-grid-nota">
+
+  <div>
+    <label>
+      Cliente:
+      <input type="text" [(ngModel)]="cliente">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Produto:
+      <select [(ngModel)]="codigoProdutoNota">
+        <option value="">Selecione</option>
+
+        @for (produto of produtos(); track produto.id) {
+          <option [value]="produto.codigo">
+            {{ produto.codigo }} - {{ produto.descricao }}
+          </option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Quantidade:
+      <input type="number" [(ngModel)]="quantidadeNota">
+    </label>
+  </div>
+  <button
+  type="button"
+  class="btn-adicionar"
+  (click)="adicionarItem()">
+  + Adicionar produto
+</button>
+@if (itensNota.length > 0) {
+  <div class="itens-nota">
+    <h3>Itens da nota</h3>
+
+    @for (item of itensNota; track $index) {
+      <div class="item-nota">
+        <span>
+          {{ item.codigoProduto }} - {{ item.descricao }}
+        </span>
+
+        <strong>
+          Qtd: {{ item.quantidade }}
+        </strong>
+      </div>
+    }
+  </div>
+}
+
+</div>
+
+<button (click)="criarNota()">
+  Criar Nota
+</button>
+@if (mensagemNota()) {
+  <div
+    class="mensagem"
+    [class.sucesso]="tipoMensagemNota() === 'sucesso'"
+    [class.erro]="tipoMensagemNota() === 'erro'">
+    {{ mensagemNota() }}
+  </div>
+}
+</section>
+
+
+<section class="card">
+<h2>Notas Fiscais</h2>
+
+@if (mensagemImpressao()) {
+  <div
+    class="mensagem"
+    [class.sucesso]="tipoMensagemImpressao() === 'sucesso'"
+    [class.erro]="tipoMensagemImpressao() === 'erro'">
+    {{ mensagemImpressao() }}
+  </div>
+}
+
+<table class="tabela">
+  <thead>
+    <tr>
+      <th>Número</th>
+      <th>Cliente</th>
+      <th>Status</th>
+      <th>Itens</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (nota of notas(); track nota.id) {
+      <tr>
+        <td>{{ nota.numero }}</td>
+        <td>{{ nota.cliente }}</td>
+       <td>
+  <span
+    class="status"
+    [class.aberta]="nota.status === 'Aberta'"
+    [class.fechada]="nota.status === 'Fechada'">
+    {{ nota.status }}
+  </span>
+</td>
+
+        <td>
+          @for (item of nota.itens; track item.id) {
+            {{ item.codigoProduto }} - Qtd: {{ item.quantidade }}
+          }
+        </td>
+
+        <td>
+          @if (nota.status === 'Aberta') {
+           <button
+  (click)="imprimirNota(nota.id)"
+  [disabled]="processandoNotaId() === nota.id">
+
+  @if (processandoNotaId() === nota.id) {
+    Processando...
+  } @else {
+    Imprimir / Fechar
+  }
+
+</button>
+          } @else {
+            Fechada
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+</section>
+</div>
