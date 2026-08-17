@@ -148,6 +148,16 @@ Caso o serviço de Estoque esteja indisponível durante o fechamento de uma nota
 
 Também são tratadas situações como estoque insuficiente, tentativa de criação de nota sem itens e dados obrigatórios não preenchidos.
 
+## Decisões técnicas
+
+- O sistema foi separado em dois microsserviços para manter independentes as responsabilidades de Estoque e Faturamento.
+- Cada microsserviço possui seu próprio banco de dados PostgreSQL.
+- O Entity Framework Core é utilizado para persistência e acesso aos dados.
+- LINQ é utilizado nas consultas ao banco, como na busca de produtos e na geração sequencial do número das notas.
+- A comunicação entre Faturamento e Estoque é realizada via HTTP utilizando `HttpClient`.
+- No frontend, o `HttpClient` do Angular é utilizado para consumir as APIs, trabalhando com Observables do RxJS e `subscribe` para tratamento das respostas.
+- Angular Signals são utilizados para controlar estados da interface, como produtos, notas, mensagens e processamento.
+
 ## Fluxo de fechamento da nota
 
 1. O usuário cria uma nota fiscal.
